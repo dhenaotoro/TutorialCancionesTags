@@ -27,6 +27,8 @@ jobs:
       #  run: python -m unittest discover -s tests
       - name: Run tox
         run: tox -e py
+      - name: Listar archivo de cobertura 2
+        run: pwd
       - name: Listar archivo de cobertura
         run: ls -ltha
       - name: Mostrar archivo cobertura
