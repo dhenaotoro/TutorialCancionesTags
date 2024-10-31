@@ -10,7 +10,8 @@ source =
     src/
     */site-packages/
 
-[report]
+[coverage:report]
+omit = tests/*
 # Regexes for lines to exclude from consideration
 exclude_lines =
     # Have to re-enable the standard pragma
