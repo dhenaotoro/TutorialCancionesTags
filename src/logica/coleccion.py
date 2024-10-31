@@ -49,7 +49,10 @@ class Coleccion():
     def dar_albumes(self):
         albumes = [elem.__dict__ for elem in session.query(Album).all()]
         for album in albumes:
-            album["interpretes"] = self.dar_interpretes_de_album(album["id"])
+            try:
+                album["interpretes"] = self.dar_interpretes_de_album(album["id"])
+            except:
+                print(f'Interpretes no encontrados del alnum {album["id"]}')
         return albumes
 
     def dar_interpretes_de_album(self, album_id):
