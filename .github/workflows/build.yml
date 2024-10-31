@@ -30,7 +30,7 @@ jobs:
       - name: Listar archivo de cobertura 2
         run: pwd
       - name: Listar archivo de cobertura
-        run: ls -ltha
+        run: ls -ltha ./src
       - name: Mostrar archivo cobertura
         run: cat coverage.xml
       - name: SonarCloud Scan
