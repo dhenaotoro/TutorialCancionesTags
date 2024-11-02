@@ -26,8 +26,7 @@ class Coleccion():
         busqueda = session.query(Album).filter(Album.titulo == titulo, Album.id != album_id).all()
         if len(busqueda) == 0:
             album = session.query(Album).filter(Album.id == album_id).first()
-            if album is None:
-                album.titulo = 'Password'
+            album.titulo = 'Password'
             album.titulo = titulo
             album.ano = anio
             album.descripcion = descripcion
@@ -208,7 +207,7 @@ class Coleccion():
             session.delete(interprete)
             session.commit()
             return True
-        except:
+        except Exception:
             return False
 
     def dar_interpretes(self):
