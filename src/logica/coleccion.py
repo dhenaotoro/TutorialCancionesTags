@@ -42,7 +42,7 @@ class Coleccion():
             session.delete(album)
             session.commit()
             return True
-        except:
+        except Exception:
             return False
 
     def dar_albumes(self):
@@ -50,7 +50,7 @@ class Coleccion():
         for album in albumes:
             try:
                 album["interpretes"] = self.dar_interpretes_de_album(album["id"])
-            except:
+            except Exception:
                 print(f'Interpretes no encontrados del alnum {album["id"]}')
         return albumes
 
@@ -74,27 +74,13 @@ class Coleccion():
         interpretes_cancion = []
         if len(interpretes) == 0:
             return False
-        else:
-            if album_id > 0:
-                busqueda = session.query(Cancion).filter(Cancion.albumes.any(Album.id.in_([album_id])),
-                                                         Cancion.titulo == titulo).all()
-                if len(busqueda) == 0:
-                    album = session.query(Album).filter(Album.id == album_id).first()
-                    nueva_cancion = Cancion(titulo=titulo, minutos=minutos, segundos=segundos, compositor=compositor,
-                                           albumes=[album])
-                    for item in interpretes:
-                        interprete = Interprete(nombre=item["nombre"], texto_curiosidades=item["texto_curiosidades"],
-                                                cancion=nueva_cancion.id)
-                        session.add(interprete)
-                        interpretes_cancion.append(interprete)
-                    nueva_cancion.interpretes = interpretes_cancion
-                    session.add(nueva_cancion)
-                    session.commit()
-                    return True
-                else:
-                    return False
-            else:
-                nueva_cancion = Cancion(titulo=titulo, minutos=minutos, segundos=segundos, compositor=compositor)
+        if album_id > 0:
+            busqueda = session.query(Cancion).filter(Cancion.albumes.any(Album.id.in_([album_id])),
+                                                     Cancion.titulo == titulo).all()
+            if len(busqueda) == 0:
+                album = session.query(Album).filter(Album.id == album_id).first()
+                nueva_cancion = Cancion(titulo=titulo, minutos=minutos, segundos=segundos, compositor=compositor,
+                                       albumes=[album])
                 for item in interpretes:
                     interprete = Interprete(nombre=item["nombre"], texto_curiosidades=item["texto_curiosidades"],
                                             cancion=nueva_cancion.id)
@@ -104,6 +90,18 @@ class Coleccion():
                 session.add(nueva_cancion)
                 session.commit()
                 return True
+            return False
+        
+        nueva_cancion = Cancion(titulo=titulo, minutos=minutos, segundos=segundos, compositor=compositor)
+        for item in interpretes:
+            interprete = Interprete(nombre=item["nombre"], texto_curiosidades=item["texto_curiosidades"],
+                                    cancion=nueva_cancion.id)
+            session.add(interprete)
+            interpretes_cancion.append(interprete)
+        nueva_cancion.interpretes = interpretes_cancion
+        session.add(nueva_cancion)
+        session.commit()
+        return True
 
     def editar_cancion(self, cancion_id, titulo, minutos, segundos, compositor, interpretes):
         busqueda = session.query(Cancion).filter(Cancion.titulo == titulo, Cancion.id != cancion_id).all()
